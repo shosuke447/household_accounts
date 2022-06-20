@@ -13,19 +13,19 @@ export default function BOPMonth(){
   }
 
   return(
-    <div style={{width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+    <div style={{width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '1.8em', border: 'thick double maroon', backgroundColor: '#ffffff40'}}>
       <div>
         <h2>今月の収支</h2>
         <div style={{textAlign: 'center'}}><span style={{fontSize: '2em', color: bopColor}}>{bop}</span>円</div>
       </div>
       <div style={{width: '100%',display: 'flex', justifyContent: 'space-around'}}>
         <div>
-          <h2>収入</h2>
-          <div style={{textAlign: 'center'}}><span style={{fontSize: '2em'}}>{income}</span>円</div>
+          <h3>収入</h3>
+          <div style={{textAlign: 'center', marginBottom: '1.8em'}}><span style={{fontSize: '2em'}}>{income}</span>円</div>
         </div>
         <div>
-          <h2>支出</h2>
-          <div style={{textAlign: 'center'}}><span style={{fontSize: '2em'}}>{expenditure}</span>円</div>
+          <h3>支出</h3>
+          <div style={{textAlign: 'center', marginBottom: '1.8em'}}><span style={{fontSize: '2em'}}>{expenditure}</span>円</div>
         </div>
       </div>
     </div>
