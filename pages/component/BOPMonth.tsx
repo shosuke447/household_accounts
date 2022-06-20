@@ -4,7 +4,7 @@ import MyApp from "../_app";
 export default function BOPMonth(){
   const [income, setIncome] = useState(0);
   const [expenditure, setExpenditure] = useState(0);
-  const bop = income - expenditure;
+  const bop :number= income - expenditure;
   var bopColor = 'black';
   if(bop<0){
     bopColor = 'crimson';
