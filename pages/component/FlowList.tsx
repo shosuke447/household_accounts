@@ -7,19 +7,19 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from "@mui/material";
+import { getFlowList } from "../../db/flowlist";
 
 type FlowListProps = {
   setExpenditure: Function
 }
 
 function createData(
-  id: number,
+  id: string,
   date: number,
   purchase: string,
   category: string,
   price: number
 ){
-  const idString: string = String(id);
   return {id, date, purchase, category, price};
 }
 
@@ -30,8 +30,8 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
     {title: 'カテゴリ', field:'category'},
     {title: '金額', field:'price'}
   ]
-  const [data, setdata] = useState([createData(1, 1, 'チョコレート', '食料品', 150), createData(2, 1, 'アイス', '食料品', 90)]);
-  const [date, setdate] = useState('');
+  const [data, setData] = useState([createData('1', 1, 'チョコレート', '食料品', 150), createData('2', 1, 'アイス', '食料品', 90)]);
+  const [date, setDate] = useState('');
   const [purchase, setPurchase] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
@@ -40,8 +40,8 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
     if(Number.isNaN(date)||Number.isNaN(price)){
       return;
     }
-    setdata([ createData(Math.random(), Number(date), purchase, category, Number(price)), ...data])
-    setdate('');
+    setData([ createData(String(Math.random()), Number(date), purchase, category, Number(price)), ...data])
+    setDate('');
     setPurchase('');
     setCategory('');
     setPrice('');
@@ -54,6 +54,24 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
     });
     setExpenditure(expenditure);
   })
+
+  useEffect(() => {
+    getFlowList().then((resultFlowList) => {
+      const flowList = resultFlowList.data;
+      setData(flowList)
+    })
+  }, [])
+
+  async function getFlowList () {
+    try{
+      const response = await fetch(`/api/flowListApi/`, {
+        method: "GET",
+      })
+      return await response.json()
+    }catch(error) {
+      throw error
+    }
+  }
 
   return(
     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -69,7 +87,7 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell align="center"><input style={{width: '80%'}} value={date} onChange={(e)=>setdate(e.target.value)} type="text" ></input></TableCell>
+            <TableCell align="center"><input style={{width: '80%'}} value={date} onChange={(e)=>setDate(e.target.value)} type="text" ></input></TableCell>
             <TableCell align="center"><input style={{width: '80%'}} value={purchase} onChange={(e)=>setPurchase(e.target.value)}></input></TableCell>
             <TableCell align="center"><input style={{width: '80%'}} value={category} onChange={(e)=>setCategory(e.target.value)}></input></TableCell>
             <TableCell align="center"><input style={{width: '80%'}} value={price} onChange={(e)=>setPrice(e.target.value)} type="text"></input></TableCell>
