@@ -37,7 +37,7 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
   const [price, setPrice] = useState('');
 
   const addList = () => {
-    if(Number.isNaN(date)==false&&Number.isNaN(price)==false){
+    if(Number.isNaN(date)||Number.isNaN(price)){
       return;
     }
     setdata([ createData(Math.random(), Number(date), purchase, category, Number(price)), ...data])
