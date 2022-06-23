@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import MyApp from "../_app";
+import { FC } from "react";
 
-export default function BOPMonth(){
-  const [income, setIncome] = useState(0);
-  const [expenditure, setExpenditure] = useState(0);
+type BOPProps = {
+  income: number,
+  expenditure: number
+}
+
+const BOPMonth: FC<BOPProps> = ({income, expenditure}) => {
   const bop :number= income - expenditure;
   var bopColor = 'black';
   if(bop<0){
@@ -31,3 +33,5 @@ export default function BOPMonth(){
     </div>
   );
 }
+
+export default BOPMonth;

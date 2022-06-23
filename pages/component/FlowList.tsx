@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, FC } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,7 +6,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { create } from "domain";
+
+type FlowListProps = {
+  setExpenditure: Function
+}
 
 function createData(
   id: number,
@@ -15,17 +18,27 @@ function createData(
   category: string,
   price: number
 ){
+  const idString: string = String(id);
   return {id, date, purchase, category, price};
 }
 
-export default function FlowList(){
+const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
   const columns = [
     {title: '日付', field:'date'},
     {title: '用途', field:'purchase'},
     {title: 'カテゴリ', field:'category'},
     {title: '金額', field:'price'}
   ]
-  const [data, setdata] = useState([createData(1, 1, 'チョコレート', '食料品', 150)]);
+  const [data, setdata] = useState([createData(1, 1, 'チョコレート', '食料品', 150), createData(2, 1, 'アイス', '食料品', 90)]);
+
+  useEffect(() => {
+    var expenditure = 0;
+    data.map((e) => {
+      expenditure += e.price;
+    });
+    setExpenditure(expenditure);
+  })
+
   return(
     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <h2>支出項目リスト</h2>
@@ -33,8 +46,8 @@ export default function FlowList(){
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            {columns.map((e) => (
-              <TableCell align="right">{e.title}</TableCell>
+            {columns.map((e, i) => (
+              <TableCell align="right" key={i}>{e.title}</TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -58,3 +71,5 @@ export default function FlowList(){
     </div>
   );
 }
+
+export default FlowList;
