@@ -29,7 +29,7 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
     {title: 'カテゴリ', field:'category'},
     {title: '金額', field:'price'}
   ]
-  const [data, setData] = useState([createData('1', 1, 'チョコレート', '食料品', 150), createData('2', 1, 'アイス', '食料品', 90)]);
+  const [data, setData] = useState([createData('1', 1, 'チョコレート', '食料品', 150), createData('2', 1, 'アイス', '食料品', 90), createData('3', 1, 'チョコレート', '食料品', 150)]);
   const [date, setDate] = useState('');
   const [purchase, setPurchase] = useState('');
   const [category, setCategory] = useState('');
