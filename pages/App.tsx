@@ -1,6 +1,7 @@
 import BOPMonth from './component/BOPMonth'
 import FlowList from './component/FlowList';
 import { useState } from 'react';
+import Graph from './component/Graph';
 
 export default function App(){
   const [income, setIncome] = useState<number>(1000);
@@ -14,6 +15,7 @@ export default function App(){
     <main style={{display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: '#ffe1bd'}}>
       <BOPMonth income={income} expenditure={expenditure} />
       <FlowList setExpenditure={updateExpenditure} />
+      <Graph expenditure={expenditure} />
     </main>
   );
 }
