@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Button } from "@mui/material";
+import { Button, Select, MenuItem } from "@mui/material";
 
 type FlowListProps = {
   setExpenditure: Function
@@ -29,14 +29,14 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
     {title: 'カテゴリ', field:'category'},
     {title: '金額', field:'price'}
   ]
-  const [data, setData] = useState([createData('1', '1', 'チョコレート', '食料品', 150), createData('2', '1', 'アイス', '食料品', 90)]);
+  const [data, setData] = useState([createData('', '','', '', Number())]);
   const [date, setDate] = useState('');
   const [purchase, setPurchase] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
 
   const addList = () => {
-    if(Number.isNaN(date)||Number.isNaN(price)){
+    if(!validateFlowList()){
       return;
     }
     setData([ createData(String(Math.random()), date, purchase, category, Number(price)), ...data]);
@@ -45,6 +45,23 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
     setPurchase('');
     setCategory('');
     setPrice('');
+  }
+
+  const validateFlowList = () => {
+    const regex = /\d{4}\/\d{1,2}\/\d{1,2}/;
+    if(!regex.test(date)){
+      return false;
+    }
+    if(purchase.length<1){
+      return false;
+    }
+    if(category.length<1){
+      return false;
+    }
+    if(Number.isNaN(price)){
+      return false;
+    }
+    return true;
   }
 
   const deleteList = (id: string) => {
@@ -137,7 +154,19 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
           <TableRow>
             <TableCell align="center"><input style={{width: '80%'}} value={date} onChange={(e)=>setDate(e.target.value)} type="text" ></input></TableCell>
             <TableCell align="center"><input style={{width: '80%'}} value={purchase} onChange={(e)=>setPurchase(e.target.value)}></input></TableCell>
-            <TableCell align="center"><input style={{width: '80%'}} value={category} onChange={(e)=>setCategory(e.target.value)}></input></TableCell>
+            <TableCell align="center">
+              <Select sx={{minWidth: 120, fontSize: 14}} size="small" value={category} onChange={(e)=>setCategory(e.target.value)}>
+                <MenuItem value={'食費'}>食費</MenuItem>
+                <MenuItem value={'日用品費'}>日用品費</MenuItem>
+                <MenuItem value={'通信費'}>通信費</MenuItem>
+                <MenuItem value={'水道光熱費'}>水道光熱費</MenuItem>
+                <MenuItem value={'保険料'}>保険料</MenuItem>
+                <MenuItem value={'交際費'}>交際費</MenuItem>
+                <MenuItem value={'医療費'}>医療費</MenuItem>
+                <MenuItem value={'交通費'}>交通費</MenuItem>
+                <MenuItem value={'その他'}>その他</MenuItem>
+              </Select>
+            </TableCell>
             <TableCell align="center"><input style={{width: '80%'}} value={price} onChange={(e)=>setPrice(e.target.value)} type="text"></input></TableCell>
             <TableCell><Button variant="contained" onClick={addList}>追加</Button></TableCell>
           </TableRow>
