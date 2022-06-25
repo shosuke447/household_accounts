@@ -14,7 +14,7 @@ type FlowListProps = {
 
 function createData(
   id: string,
-  date: number,
+  date: string,
   purchase: string,
   category: string,
   price: number
@@ -29,7 +29,7 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
     {title: 'カテゴリ', field:'category'},
     {title: '金額', field:'price'}
   ]
-  const [data, setData] = useState([createData('1', 1, 'チョコレート', '食料品', 150), createData('2', 1, 'アイス', '食料品', 90), createData('3', 1, 'チョコレート', '食料品', 150)]);
+  const [data, setData] = useState([createData('1', '1', 'チョコレート', '食料品', 150), createData('2', '1', 'アイス', '食料品', 90)]);
   const [date, setDate] = useState('');
   const [purchase, setPurchase] = useState('');
   const [category, setCategory] = useState('');
@@ -39,11 +39,20 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
     if(Number.isNaN(date)||Number.isNaN(price)){
       return;
     }
-    setData([ createData(String(Math.random()), Number(date), purchase, category, Number(price)), ...data])
+    setData([ createData(String(Math.random()), date, purchase, category, Number(price)), ...data]);
+    postFlowItem(date, purchase, category, Number(price));
     setDate('');
     setPurchase('');
     setCategory('');
     setPrice('');
+  }
+
+  const deleteList = (id: string) => {
+    const newList = data.filter((item) => {
+      return id !== item.id;
+    });
+    deleteFlowItem(id);
+    setData(newList);
   }
 
   useEffect(() => {
@@ -69,6 +78,46 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
       return await response.json()
     }catch(error) {
       throw error
+    }
+  }
+
+  async function postFlowItem(date :string, purchase :string, category :string, price :number) {
+    const contentType = "application/json"
+    console.log(date)
+    try {
+      const body = {
+        user_id: 'fox',
+        date: date,
+        purchase: purchase,
+        category: category,
+        price: price
+      }
+      const response = await fetch("/api/flowListApi/", {
+        method: "POST",
+        headers: {
+          Accept: contentType,
+          "Content-Type": contentType,
+        },
+        body: JSON.stringify(body),
+      })
+
+      const jsonResponse = await response.json()
+
+      console.log(jsonResponse)
+
+      return jsonResponse.data
+    } catch (error) {
+      throw new Error('登録できませんでした')
+    }
+  }
+
+  async function deleteFlowItem(id: string) {
+    try {
+      await fetch(`/api/flowListApi/${id}`, {
+        method: "DELETE",
+      })
+    } catch (error) {
+      throw new Error('削除できませんでした')
     }
   }
 
@@ -103,6 +152,7 @@ const FlowList: FC<FlowListProps> = ({setExpenditure}) => {
               <TableCell align="center">{row.purchase}</TableCell>
               <TableCell align="center">{row.category}</TableCell>
               <TableCell align="center">{row.price}</TableCell>
+              <TableCell><Button variant="contained" color="error" onClick={() => deleteList(row.id)}>削除</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
